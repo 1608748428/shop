@@ -4,6 +4,10 @@ import VueRouter from 'vue-router'
 import login from '../components/login.vue'
 // 导入 home页面组件
 import home from '../components/home.vue'
+// 导入 welcome页面组件
+import welcome from '../components/welcome.vue'
+// 导入 users用户页面组件
+import users from '../components/user/users.vue'
 
 Vue.use(VueRouter)
 
@@ -22,7 +26,22 @@ const router = new VueRouter({
     },
     {
       path: '/home',
-      component: home
+      component: home,
+      // 重定向到welcome
+      redirect: 'welcome',
+      // 子路由
+      children: [
+        {
+          path: '/welcome',
+          component: welcome
+        },
+        {
+          // 用户列表组件
+          path: '/users',
+          component: users
+        }
+
+      ]
     }
 
   ]

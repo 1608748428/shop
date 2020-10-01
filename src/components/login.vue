@@ -81,6 +81,8 @@ export default {
     login() {
       this.$refs.loginFormRef.validate((val) => {
         if (val) {
+
+          // axios访问登录界面的API
           axios({
             url: "http://127.0.0.1:8888/api/private/v1/login",
             method: "post",
@@ -97,6 +99,16 @@ export default {
             } else {
               this.$message.error("登录失败！");
             }
+          });
+
+          // axios 请求拦截  保证拥有获取数据的权限
+          axios.interceptors.request.use((config) => {
+            // 为请求头对象,添加 token 验证的 Authorization 字段
+            config.headers.Authorization = window.sessionStorage.getItem(
+              "token"
+            );
+            // 在最后必须 return config
+            return config;
           });
         }
       });
