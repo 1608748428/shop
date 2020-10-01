@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import {
-    Button, Form, FormItem, Input, Message, Container, Header, Aside, Main, Menu, Submenu, MenuItem, Breadcrumb, BreadcrumbItem, Card, Row, Col,Table,TableColumn,Switch,Tooltip,Pagination,Dialog,MessageBox 
+    Button, Form, FormItem, Input, Message, Container, Header, Aside, Main, Menu, Submenu, MenuItem, Breadcrumb, BreadcrumbItem, Card, Row, Col,Table,TableColumn,Switch,Tooltip,Pagination,Dialog,MessageBox ,Tag,Tree,Select,Option
 } from 'element-ui'
 
 // 登录界面
@@ -29,6 +29,11 @@ Vue.use(Switch)
 Vue.use(Tooltip)
 Vue.use(Pagination)
 Vue.use(Dialog)
+Vue.use(Select)
+Vue.use(Option)
+// 权限列表
+Vue.use(Tag)
+Vue.use(Tree)
 // 只要使用this 就可以全局调用这个消息提示弹框
 Vue.prototype.$message = Message
 // 只要使用this 就可以全局调用这个弹框

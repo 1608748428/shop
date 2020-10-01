@@ -80,6 +80,7 @@
                 type="warning"
                 icon="el-icon-s-help"
                 size="mini"
+                @click="assignroles(scope.row)"
               ></el-button>
             </el-tooltip>
           </template>
@@ -159,6 +160,32 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="alterDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="alterDialogVisibles(alterForm.id)"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
+
+    <!-- 分配角色的对话框 -->
+    <el-dialog title="分配角色" :visible.sync="rolesDialogVisible" width="50%">
+      <div>
+        <p>当前的用户:{{ userLists.username }}</p>
+        <p>当前的角色:{{ userLists.role_name }}</p>
+        <p>
+          分配新角色:
+          <el-select v-model="newroles" placeholder="请选择">
+            <el-option
+              v-for="item in rolesList"
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.id"
+            >
+            </el-option>
+          </el-select>
+        </p>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="rolesDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveRolesInfo"
           >确 定</el-button
         >
       </span>
@@ -273,6 +300,14 @@ export default {
           { validator: checkMobile, trigger: "blur" },
         ],
       },
+      // 分配角色对话框的显示与隐藏
+      rolesDialogVisible: false,
+      // 当前选中行的用户信息
+      userLists: {},
+      // 角色信息
+      rolesList: [],
+      // 选中的角色
+      newroles: "",
     };
   },
   created() {
@@ -314,7 +349,7 @@ export default {
       }).then((res) => {
         if (res.data.meta.status !== 200) {
           userinfo.mg_state = !userinfo.mg_state;
-          this.$message.error("更新用户状态失败！");
+          this.$message.error("更新用户状态失败,请联系管理员！");
         }
         this.$message.success("更新用户状态成功！");
       });
@@ -344,7 +379,7 @@ export default {
               // 重新获取用户列表的数据
               this.getusersData();
             } else {
-              this.$message.error("用户添加失败！");
+              this.$message.error("用户添加失败,请联系管理员！");
             }
           });
         }
@@ -371,7 +406,7 @@ export default {
               // 重新获取用户列表信息
               this.getusersData();
             } else {
-              this.$message.error("用户信息修改失败！");
+              this.$message.error("用户信息修改失败,请联系管理员！");
             }
           });
         }
@@ -397,7 +432,8 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-      }).then(() => {
+      })
+        .then(() => {
           axios({
             url: `http://127.0.0.1:8888/api/private/v1/users/${deleteuser}`,
             method: "delete",
@@ -408,13 +444,55 @@ export default {
               // 重新获取用户列表数据
               this.getusersData();
             } else {
-              this.$message.error("删除用户失败！");
+              this.$message.error("删除用户失败,请联系管理员！");
             }
           });
-        }).catch(() => {
+        })
+        .catch(() => {
           this.$message.info("已取消删除！");
         });
     },
+    // 点击按钮 弹出分配角色的对话框
+    assignroles(userInfo) {
+      // 每次点都初始化选中的角色为空
+      this.newroles='';
+      // 将当前选中行的数据赋值给 userLists 对象
+      this.userLists = userInfo;
+      // 查询角色
+      axios({
+        url: `http://127.0.0.1:8888/api/private/v1/roles`,
+        method: "get",
+      }).then((res) => {
+        if (res.data.meta.status === 200) {
+          this.rolesList = res.data.data;
+        }else{
+          this.$message.error("角色获取失败,请联系管理员！");
+        }
+      });
+      this.rolesDialogVisible = true;
+    },
+    // 点击确定按钮, 分配角色
+    saveRolesInfo() {
+      if(!this.newroles) return this.$message.error("请先选择新角色！")
+      // 分配用户角色
+      axios({
+        url: `http://127.0.0.1:8888/api/private/v1/users/${this.userLists.id}/role`,
+        method:"put",
+        data:{
+          rid:this.newroles
+        }
+      }).then(res=>{
+        if(res.data.meta.status===200) {
+          this.$message.success("设置用户角色成功！")
+          // 关闭分配角色对话框
+          this.rolesDialogVisible = false;
+          // 重新获取用户信息
+          this.getusersData();
+        }else{
+          this.$message.error("设置用户角色失败,请联系管理员！")
+        }
+      })
+    }
   },
 };
 </script>

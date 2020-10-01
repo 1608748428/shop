@@ -8,6 +8,10 @@ import home from '../components/home.vue'
 import welcome from '../components/welcome.vue'
 // 导入 users用户页面组件
 import users from '../components/user/users.vue'
+// 导入 rights 权限列表组件
+import rights from '../components/power/rights.vue'
+// 导入 roles 角色列表组件
+import roles from '../components/power/roles.vue'
 
 Vue.use(VueRouter)
 
@@ -39,6 +43,16 @@ const router = new VueRouter({
           // 用户列表组件
           path: '/users',
           component: users
+        },
+        {
+          // 权限列表组件
+          path: '/rights',
+          component: rights
+        },
+        {
+          // 角色列表组件
+          path: '/roles',
+          component: roles
         }
 
       ]

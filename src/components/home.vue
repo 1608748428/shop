@@ -11,7 +11,7 @@
     <el-container>
       <!-- 左边导航栏 -->
       <el-aside :width="iscollapse ? '64px' : '200px'">
-        <div class="gottle_btn" @click="toggleCollapse">{{arrow}}</div>
+        <div class="gottle_btn" @click="toggleCollapse">{{ arrow }}</div>
         <el-menu
           background-color="#545c64"
           text-color="#fff"
@@ -20,10 +20,14 @@
           :collapse="iscollapse"
           :collapse-transition="false"
           router
-          :default-active='activePath'
+          :default-active="activePath"
         >
           <!-- 一级菜单 -->
-          <el-submenu :index="item.id+''" v-for="item in listnav" :key="item.id">
+          <el-submenu
+            :index="item.id + ''"
+            v-for="item in listnav"
+            :key="item.id"
+          >
             <!-- 一级菜单模板 -->
             <template slot="title">
               <!-- 图标 -->
@@ -32,7 +36,12 @@
               <span>{{ item.authName }}</span>
             </template>
             <!-- 二次菜单 -->
-            <el-menu-item :index= "'/' + subitem.path" v-for="subitem in item.children" :key="subitem.id" @click="saveNavStart('/' + subitem.path)">
+            <el-menu-item
+              :index="'/' + subitem.path"
+              v-for="subitem in item.children"
+              :key="subitem.id"
+              @click="saveNavStart('/' + subitem.path)"
+            >
               <template slot="title">
                 <!-- 图标 -->
                 <i class="el-icon-menu"></i>
@@ -60,24 +69,24 @@ export default {
       //存放左侧导航栏数据
       listnav: [],
       //导航栏的一级菜单图标
-      listicon:{
-        125:'el-icon-user-solid',
-        103:'el-icon-coin',
-        101:'el-icon-s-goods',
-        102:'el-icon-s-cooperation',
-        145:'el-icon-s-data'
+      listicon: {
+        125: "el-icon-user-solid",
+        103: "el-icon-coin",
+        101: "el-icon-s-goods",
+        102: "el-icon-s-cooperation",
+        145: "el-icon-s-data",
       },
       // 是否水平折叠收起菜单
-      iscollapse:false,
+      iscollapse: false,
       // 折叠导航栏显示的图标
-      arrow:'<',
+      arrow: "<",
       // 当前激活菜单的index
-      activePath:''
+      activePath: "",
     };
   },
   created() {
     this.getListmenus();
-    this.activePath = window.sessionStorage.getItem('activePath')
+    this.activePath = window.sessionStorage.getItem("activePath");
   },
   methods: {
     login() {
@@ -101,18 +110,17 @@ export default {
     // 点击是否折叠的方法
     toggleCollapse() {
       this.iscollapse = !this.iscollapse;
-      if(this.iscollapse === true)
-      {
-        this.arrow = '>'
+      if (this.iscollapse === true) {
+        this.arrow = ">";
       } else {
-        this.arrow = '<'
+        this.arrow = "<";
       }
     },
     // 获取当前点击的二次菜单 保存链接的激活状态
     saveNavStart(activePath) {
-      window.sessionStorage.setItem('activePath',activePath);
+      window.sessionStorage.setItem("activePath", activePath);
       this.activePath = activePath;
-    }
+    },
   },
 };
 </script>
